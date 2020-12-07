@@ -1,6 +1,4 @@
-FROM debian:stretch
-
-MAINTAINER Christian Luginbühl <dinkel@pimprecords.com>
+FROM quay.io/ibmz/debian:stable
 
 ENV OPENLDAP_VERSION 2.4.44
 ENV DEBUG_LEVEL 32768
@@ -8,7 +6,7 @@ ENV DEBUG_LEVEL 32768
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
         ldap-utils \
-        slapd=${OPENLDAP_VERSION}* && \
+        slapd && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
