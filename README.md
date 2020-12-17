@@ -5,7 +5,7 @@
 ### Versions
 2.4.44
 
-docker-openldap
+openldap
 ===============
 
 The image is based on Debian stable.
