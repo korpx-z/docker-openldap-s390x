@@ -1,4 +1,4 @@
-FROM quay.io/ibmz/debian:stable
+FROM quay.io/ibm/debian:stable
 
 ENV OPENLDAP_VERSION 2.4.44
 ENV DEBUG_LEVEL 32768
