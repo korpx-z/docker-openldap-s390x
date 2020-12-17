@@ -1,10 +1,14 @@
+### This image is built to run on s390x architecture.
+-    [build source](https://github.com/korpx-z/openldap-s390x)
+-    [original source code](https://github.com/openfrontier/docker-openldap)
+
+### Versions
+2.4.44
+
 docker-openldap
 ===============
 
-The image is based on Debian stable ("stretch" at the moment). The Dockerfile is
-inspired by [cnry/openldap](https://registry.hub.docker.com/u/cnry/openldap/),
-but as said before, running a stable Debian and be a little less verbose, but
-more complete in the configuration.
+The image is based on Debian stable.
 
 NOTE: On purpose, there is no secured channel (TLS/SSL), because I believe that
 this service should never be exposed to the internet, but only be used directly
@@ -16,14 +20,14 @@ Usage
 The most simple form would be to start the application like so (however this is
 not the recommended way - see below):
 
-    docker run -d -p 389:389 -e SLAPD_PASSWORD=mysecretpassword -e SLAPD_DOMAIN=ldap.example.org dinkel/openldap
+    docker run -d -p 389:389 -e SLAPD_PASSWORD=mysecretpassword -e SLAPD_DOMAIN=ldap.example.org quay.io/ibm/openldap:2.4.44
 
 To get the full potential this image offers, one should first create a data-only
 container or (named) volumes (see "Data persistence" below) and start the 
 OpenLDAP daemon in one of these ways:
 
-    docker run -d --volumes-from your-data-container [CONFIG] dinkel/openldap
-    docker run -d --volume your-config-volume:/etc/ldap --volume your-data-volume:/var/lib/ldap [CONFIG] dinkel/openldap
+    docker run -d --volumes-from <your-data-container> [CONFIG] quay.io/ibm/openldap:2.4.44
+    docker run -d --volume <docker_volume>:/etc/ldap --volume <docker_volume>:/var/lib/ldap [CONFIG] quay.io/ibm/openldap:2.4.44
 
 An application talking to OpenLDAP should then `--link` the container:
 
@@ -112,12 +116,6 @@ pwdSafeModify: FALSE
 See the [docs](http://www.zytrax.com/books/ldap/ch6/ppolicy.html) for descriptions
 on the available attributes and what they mean.
 
-Assuming you are on a host that has the client side tools installed (maybe you 
-have to change the hostname as well), run:
-
-    ldapadd -h localhost -x -c -D 'cn=admin,dc=ldap,dc=example,dc=org' -w [$SLAPD_PASSWORD] -f default-policy.ldif
-
-or use the prepopulation capability described below.
 
 Prepopulate with data
 ---------------------
@@ -127,7 +125,7 @@ some data before launching the container. In order to do that, one can mount a
 host directory as a data volume in `/etc/ldap.dist/prepopulate`. Each LDIF file 
 is run through `slapadd` in alphabetical order. E.g.
 
-    docker run -d --volume /path/to/dir/with/ldif-files:/etc/ldap.dist/prepopulate [CONFIG] dinkel/openldap
+    docker run -d --volume <docker_volume>/dir/with/ldif-files:/etc/ldap.dist/prepopulate [CONFIG] quay.io/ibm/openldap:2.4.44
 
 Please note that the prepopulation files are only processed on the containers 
 first run (a.k.a. as long as there is no data in the database).
